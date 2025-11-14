@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "inode.h"
+#include "bloc.h"
 
 #define TAILLE_BUFFER 100
 

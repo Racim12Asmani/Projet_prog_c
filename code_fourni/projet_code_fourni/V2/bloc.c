@@ -4,7 +4,9 @@
  * Fichier : bloc.c
  * Module de gestion des blocs de données.
  **/
-
+#include <stdlib.h> // Pour malloc, free et NULL
+#include <stdio.h>  // Pour fprintf et stderr
+#include <string.h> // Pour memcpy
 #include "bloc.h"
 
 /* V1
@@ -12,8 +14,13 @@
  * Entrée : Aucune
  * Retour : le bloc créé ou NULL en cas de problème
  */
-tBloc CreerBloc (void) {
-  // A COMPLETER
+tBloc CreerBloc(void) {
+  tBloc bloc = (tBloc)malloc(TAILLE_BLOC * sizeof(unsigned char));
+  if (bloc == NULL) {
+    fprintf(stderr, "probleme création : CreerBloc \n");
+    return NULL;
+  }
+  return bloc;
 }
 
 /* V1
@@ -22,7 +29,10 @@ tBloc CreerBloc (void) {
  * Retour : aucun
  */
 void DetruireBloc(tBloc *pBloc) {
-  // A COMPLETER
+  if (*pBloc != NULL && pBloc != NULL) {
+    free(*pBloc);
+    *pBloc = NULL;
+  }
 }
 
 /* V1
@@ -31,8 +41,14 @@ void DetruireBloc(tBloc *pBloc) {
  * Entrées : le bloc, l'adresse du contenu à copier et sa taille en octets
  * Retour : le nombre d'octets effectivement écrits dans le bloc
  */
-long EcrireContenuBloc (tBloc bloc, unsigned char *contenu, long taille) {
-  // A COMPLETER
+long EcrireContenuBloc(tBloc bloc, unsigned char *contenu, long taille) {
+  if (bloc == NULL || contenu == NULL || taille <= 0) {
+    return 0;
+  }
+
+  long tailleCopiee = (taille > TAILLE_BLOC) ? TAILLE_BLOC : taille;
+  memcpy(bloc, contenu, tailleCopiee);
+  return tailleCopiee;
 }
 
 /* V1
@@ -42,5 +58,12 @@ long EcrireContenuBloc (tBloc bloc, unsigned char *contenu, long taille) {
  * Retour : le nombre d'octets effectivement lus dans le bloc
  */
 long LireContenuBloc(tBloc bloc, unsigned char *contenu, long taille) {
-  // A COMPLETER
+  if (bloc == NULL || contenu == NULL || taille <= 0) {
+    return 0;
+  }
+
+  long tailleCopiee = (taille > TAILLE_BLOC) ? TAILLE_BLOC : taille;
+  memcpy(contenu, bloc, tailleCopiee);
+  return tailleCopiee;
 }
+

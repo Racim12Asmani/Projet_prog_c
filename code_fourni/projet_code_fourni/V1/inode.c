@@ -4,12 +4,13 @@
  * Fichier : inode.c
  * Module de gestion des inodes.
  **/
-#include "inode.h"
 #include "bloc.h"
+#include "inode.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
+#include <string.h>
+
 
 // Nombre maximal de blocs dans un inode
 #define NB_BLOCS_DIRECTS 10
@@ -153,33 +154,40 @@ natureFichier Type(tInode inode) {
  */
 
 void AfficherInode(tInode inode) {
-  if (inode == NULL) {
-    printf("vide\n");
-    return;
-  }
+    if (inode == NULL) {
+        printf("vide\n");
+        return;
+    }
 
-  printf("--------Inode----[%u] :\n", inode->numero);
-  printf("type : ");
-  switch (inode->type) {
-    case ORDINAIRE: printf("Ordinaire\n"); break;
-    case REPERTOIRE: printf("Repertoire\n"); break;
-    default: printf("Autre\n");
-  }
-  printf("taille : %ld octets\n", inode->taille);
-  printf("date dernier accès : %s", ctime(&(inode->dateDerAcces)));
-  printf("date dernière modification : %s", ctime(&(inode->dateDerModif)));
-  printf("date dernière modification inode : %s", ctime(&(inode->dateDerModifInode)));
+    printf("--------Inode----[%u] :\n", inode->numero);
+    printf("type : ");
 
-  printf("Données :\n");
-  if (inode->blocDonnees[0] != NULL) {
-    unsigned char buffer[TAILLE_BLOC + 1];
-    long tailleLue = LireContenuBloc(inode->blocDonnees[0], buffer, inode->taille);
-    buffer[tailleLue] = '\0';
-    printf("%s\n", buffer);
-  } else {
-    printf("\n");
-  }
+    if (inode->type == ORDINAIRE) {
+        printf("Ordinaire\n");
+    }
+    else if (inode->type == REPERTOIRE) {
+        printf("Repertoire\n");
+    }
+    else {
+        printf("Autre\n");
+    }
+    printf("    taille : %ld octets\n", inode->taille);
+    printf("    date dernier accès : %s", ctime(&(inode->dateDerAcces)));
+    printf("    date dernière modification : %s", ctime(&(inode->dateDerModif)));
+    printf("    date dernière modification inode : %s", ctime(&(inode->dateDerModifInode)));
+
+    printf("    Données :\n");
+
+    if (inode->blocDonnees[0] != NULL) {
+        unsigned char buffer[TAILLE_BLOC + 1];
+        long tailleLue = LireContenuBloc(inode->blocDonnees[0], buffer, inode->taille);
+        buffer[tailleLue] = '\0';
+        printf("%s\n", buffer);
+    } else {
+        printf("\n");
+    }
 }
+
 
 
 /* V1
@@ -188,6 +196,7 @@ void AfficherInode(tInode inode) {
  * Entrées : l'inode, l'adresse de la zone où recopier et la taille en octets de l'inode
  * Retour : le nombre d'octets effectivement lus dans l'inode ou -1 en cas d'erreur
  */
+
 long LireDonneesInode1bloc(tInode inode, unsigned char *contenu, long taille) {
   if (inode == NULL || contenu == NULL || taille <= 0) {
     return -1;
@@ -202,6 +211,7 @@ long LireDonneesInode1bloc(tInode inode, unsigned char *contenu, long taille) {
 
   return tailleLue;
 }
+
 
 
 
