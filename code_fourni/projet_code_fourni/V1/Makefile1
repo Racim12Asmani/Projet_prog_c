@@ -1,0 +1,24 @@
+CC = gcc
+CFLAGS = -Wall -Wpedantic -std=c11 -Wextra -g
+RM = rm -f
+OBJ = bloc.o inode.o gerer_sf_v1.o
+EXE = gerer_sf_v1
+
+all: $(EXE)
+
+$(EXE): $(OBJ)
+	$(CC) $(CFLAGS) -o $(EXE) $(OBJ)
+
+gerer_sf_v1.o: gerer_sf_v1.c bloc.h inode.h
+	$(CC) $(CFLAGS) -c gerer_sf_v1.c
+
+bloc.o: bloc.c bloc.h
+	$(CC) $(CFLAGS) -c bloc.c
+
+inode.o: inode.c inode.h bloc.h
+	$(CC) $(CFLAGS) -c inode.c
+
+.PHONY: clean
+
+clean:
+	$(RM) $(OBJ) $(EXE)
